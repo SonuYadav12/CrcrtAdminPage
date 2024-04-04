@@ -6,7 +6,8 @@ const ListProduct = () => {
 
   const fetchInfo = async () => {
     try {
-      const response = await fetch("http://localhost:4000/allproduct");
+      // const response = await fetch("http://localhost:4000/allproduct");
+      const response = await fetch("https://cart-craft-api.vercel.app/allproduct");
       const data = await response.json();
       setAllProducts(data);
     } catch (error) {
@@ -16,7 +17,8 @@ const ListProduct = () => {
 
   const removetocart = async (id) => {
     try {
-      await fetch("http://localhost:4000/removeproduct", {
+      // await fetch("http://localhost:4000/removeproduct", {
+        await fetch("https://cart-craft-api.vercel.app/removeproduct", {
         method: "POST",
         headers: {
           Accept: "application/json",

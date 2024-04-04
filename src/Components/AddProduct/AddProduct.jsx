@@ -30,35 +30,43 @@ const AddProduct = () => {
         formData.append("category", productDetails.category);
         formData.append("new_price", productDetails.new_price);
         formData.append("old_price", productDetails.old_price);
-
+    
         try {
-            const response = await fetch("http://localhost:4000/upload", {
+            // const response = await fetch("http://localhost:4000/upload", {
+                const response = await fetch("https://cart-craft-api.vercel.app/upload", {
                 method: "POST",
                 body: formData
             });
             const responseData = await response.json();
-
-            if (response.ok && responseData.success) {
-                alert("Image uploaded successfully");
-                await fetch("http://localhost:4000/addproduct", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        ...productDetails,
-                        image: responseData.image_url
-                    })
-                });
-                alert("Product Added");
+    
+            if (response.ok) {
+                if (responseData.success) {
+                    alert("Image uploaded successfully");
+                    // Assuming responseData.imageUrl contains the Cloudinary URL
+                    // Modify the endpoint URL and request body accordingly
+                    // await fetch("http://localhost:4000/addproduct", {
+                        await fetch("https://cart-craft-api.vercel.app/addproduct", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            ...productDetails,
+                            image: responseData.imageUrl
+                        })
+                    });
+                    alert("Product Added");
+                } else {
+                    alert("Failed to upload image");
+                }
             } else {
-                alert("Failed to upload image");
+                alert("Failed to upload image: " + responseData.message);
             }
         } catch (error) {
             console.error("Error:", error);
-            alert("Failed to add product");
+            alert("Failed to add product: " + error.message);
         }
-
+    
         // Reset form fields and image state
         setProductDetails({
             name: "",
@@ -69,6 +77,7 @@ const AddProduct = () => {
         });
         setImage(null);
     };
+    
 
     return (
         <div className="flex items-start p-5 h-full justify-start px-5  w-full ">
